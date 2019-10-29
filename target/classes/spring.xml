@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--
+    xmlns 即 xml namespace xml 使用的命名空间
+    xmlns:xsi 即 xml schema instance xml 遵守的具体规范
+    xsi:schemaLocation 本文档 xml 遵守的规范 官方指定
+    -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+        <property name="username" value="root"/>
+        <property name="password" value="2063339424"/>
+        <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/chenqijia?useSSL=FALSE&amp;serverTimezone=UTC"/>
+    </bean>
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <bean id="helloService" class="com.shsxt.service.HelloService"></bean>
+    <bean id="Role" class="com.shsxt.chapter.Role">
+        <property name="id" value="1"/>
+        <property name="roleName" value="工程师"/>
+        <property name="note" value="重要人员"/>
+    </bean>
+    <bean id="ComplexAssembly" class="com.shsxt.chapter.ComplexAssembly">
+        <property name="id" value="1"/>
+        <property name="list">
+            <list>
+                <value>value-list-1</value>
+                <value>value-list-2</value>
+                <value>value-list-3</value>
+            </list>
+        </property>
+        <property name="map">
+            <map>
+                <entry key="key1" value="value-key-1"/>
+                <entry key="key2" value="value-key-2"/>
+                <entry key="key3" value="value-key-3"/>
+            </map>
+        </property>
+        <property name="properties">
+            <props>
+                <prop key="prop1">value-prop-1</prop>
+                <prop key="prop2">value-prop-2</prop>
+                <prop key="prop3">value-prop-3</prop>
+            </props>
+        </property>
+        <property name="set">
+            <set>
+                <value>value-set-1</value>
+                <value>value-set-2</value>
+                <value>value-set-3</value>
+            </set>
+        </property>
+        <property name="array">
+            <array>
+                <value>value-array-1</value>
+                <value>value-array-2</value>
+                <value>value-array-3</value>
+            </array>
+        </property>
+    </bean>
+    <bean id="role1" class="com.shsxt.chapter.Role">
+        <property name="id" value="1"/>
+        <property name="roleName" value="role_name_1"/>
+        <property name="note" value="role_note_1"/>
+    </bean>
+    <bean id="role2" class="com.shsxt.chapter.Role">
+        <property name="id" value="2"/>
+        <property name="roleName" value="role_name_2"/>
+        <property name="note" value="role_note_2"/>
+    </bean>
+
+    <bean id="user1" class="com.shsxt.chapter.User">
+        <property name="id" value="1"/>
+        <property name="userName" value="user_name_1"/>
+        <property name="note" value="user_note_1"/>
+    </bean>
+    <bean id="user2" class="com.shsxt.chapter.User">
+        <property name="id" value="2"/>
+        <property name="userName" value="user_name_2"/>
+        <property name="note" value="user_note_2"/>
+    </bean>
+
+    <bean id="userRoleAssembly" class="com.shsxt.chapter.UserRoleAssembly">
+        <property name="id" value="1"/>
+        <property name="list">
+            <list>
+                <ref bean="role1"/>
+                <ref bean="role2"/>
+            </list>
+        </property>
+        <property name="map">
+            <map>
+                <entry key-ref="role1" value-ref="user1"/>
+                <entry key-ref="role2" value-ref="user2"/>
+            </map>
+        </property>
+        <property name="set">
+            <set>
+                <ref bean="role1"/>
+                <ref bean="role2"/>
+            </set>
+        </property>
+    </bean>
+    <bean id="SqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:sqlMapConfig.xml"/>
+    </bean>
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="SqlSessionFactory"/>
+        <constructor-arg value="BATCH"/>
+    </bean>
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.shsxt.mapper"/>
+        <property name="SqlSessionFactoryBeanName" value="SqlSessionFactory"/>
+        <property name="annotationClass" value="org.springframework.stereotype.Repository"/>
+    </bean>
+</beans>
